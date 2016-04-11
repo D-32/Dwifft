@@ -21,14 +21,19 @@ public class TableViewDiffCalculator<T: Equatable> {
     
     /// Right now this only works on a single section of a tableView. If your tableView has multiple sections, though, you can just use multiple TableViewDiffCalculators, one per section, and set this value appropriately on each one.
     public var sectionIndex: Int = 0
-    
+    public var ignoreChanges: Bool = false
+
     /// You can change insertion/deletion animations like this! Fade works well. So does Top/Bottom. Left/Right/Middle are a little weird, but hey, do your thing.
     public var insertionAnimation = UITableViewRowAnimation.Automatic, deletionAnimation = UITableViewRowAnimation.Automatic
     
     /// Change this value to trigger animations on the table view.
     public var rows : [T] {
         didSet {
-            
+          
+            if ignoreChanges {
+                return
+            }
+
             let oldRows = oldValue
             let newRows = self.rows
             let diff = oldRows.diff(newRows)
@@ -60,11 +65,16 @@ public class CollectionViewDiffCalculator<T: Equatable> {
     
     /// Right now this only works on a single section of a collectionView. If your collectionView has multiple sections, though, you can just use multiple CollectionViewDiffCalculators, one per section, and set this value appropriately on each one.
     public var sectionIndex: Int = 0
+    public var ignoreChanges: Bool = false
     
     /// Change this value to trigger animations on the collection view.
     public var rows : [T] {
         didSet {
-            
+
+            if ignoreChanges {
+                return
+            }
+
             let oldRows = oldValue
             let newRows = self.rows
             let diff = oldRows.diff(newRows)
