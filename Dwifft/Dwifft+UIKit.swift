@@ -29,7 +29,7 @@ public class TableViewDiffCalculator<T: Equatable> {
     /// Change this value to trigger animations on the table view.
     public var rows : [T] {
         didSet {
-          
+
             if ignoreChanges {
                 return
             }
@@ -57,7 +57,8 @@ public class TableViewDiffCalculator<T: Equatable> {
 public class CollectionViewDiffCalculator<T: Equatable> {
     
     public weak var collectionView: UICollectionView?
-    
+    public var offset: Int = 0
+
     public init(collectionView: UICollectionView, initialRows: [T] = []) {
         self.collectionView = collectionView
         self.rows = initialRows
@@ -79,8 +80,8 @@ public class CollectionViewDiffCalculator<T: Equatable> {
             let newRows = self.rows
             let diff = oldRows.diff(newRows)
             if (diff.results.count > 0) {
-                let insertionIndexPaths = diff.insertions.map({ NSIndexPath(forItem: $0.idx, inSection: self.sectionIndex) })
-                let deletionIndexPaths = diff.deletions.map({ NSIndexPath(forItem: $0.idx, inSection: self.sectionIndex) })
+                let insertionIndexPaths = diff.insertions.map({ NSIndexPath(forItem: $0.idx + offset, inSection: self.sectionIndex) })
+                let deletionIndexPaths = diff.deletions.map({ NSIndexPath(forItem: $0.idx + offset, inSection: self.sectionIndex) })
                 
                 collectionView?.performBatchUpdates({ () -> Void in
                     self.collectionView?.insertItemsAtIndexPaths(insertionIndexPaths)
